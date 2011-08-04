@@ -59,8 +59,9 @@ $roots_css_frameworks = array(
 		'label'     => __('Blueprint CSS', 'roots'),
 		'classes'   => array(
 			'container' => 'span-24',
-			'main'      => 'span-14 append-1',
-			'sidebar'   => 'span-8 prepend-1 last'
+			'main'      => 'span-12',
+			'sidebar_first'   => 'span-5 append-1 first',
+			'sidebar'   => 'span-5 prepend-1 last'
 		)
 	),
 	'960gs_12' => array(
@@ -68,8 +69,9 @@ $roots_css_frameworks = array(
 		'label'   => __('960gs (12 cols)', 'roots'),
 		'classes' => array(
 			'container' => 'container_12',
-			'main'    => 'grid_7 suffix_1',
-			'sidebar' => 'grid_4'
+			'main'    => 'grid_6',
+			'sidebar_first'   => 'grid_3',
+			'sidebar' => 'grid_3'
 		)
 	),
 	'960gs_16' => array(
@@ -77,8 +79,9 @@ $roots_css_frameworks = array(
 		'label'    => __('960gs (16 cols)', 'roots'),
 		'classes'  => array(
 			'container' => 'container_16',
-			'main'    => 'grid_9 suffix_1',
-			'sidebar' => 'grid_6'
+			'main'    => 'grid_8',
+			'sidebar_first'   => 'grid_4',
+			'sidebar' => 'grid_4'
 		)
 	),
 	'960gs_24' => array(
@@ -86,8 +89,9 @@ $roots_css_frameworks = array(
 		'label'   => __('960gs (24 cols)', 'roots'),
 		'classes' => array(
 			'container' => 'container_24',
-			'main'    => 'grid_15 suffix_1',
-			'sidebar' => 'grid_8'
+			'main'    => 'grid_12',
+			'sidebar_first'   => 'grid_5 suffix_1',
+			'sidebar' => 'grid_5 prefix_1'
 		)
 	),
 	'1140' => array(
@@ -95,8 +99,9 @@ $roots_css_frameworks = array(
 		'label'   => __('1140', 'roots'),
 		'classes' => array(
 			'container' => 'container',
-			'main'    => 'sevencol',
-			'sidebar' => 'fourcol last'
+			'main'    => 'sixcol',
+			'sidebar_first' => 'threecol',
+			'sidebar' => 'threecol last'
 		)
 	),
 	'adapt' => array(
@@ -104,8 +109,9 @@ $roots_css_frameworks = array(
 		'label'   => __('Adapt.js', 'roots'),
 		'classes' => array(
 			'container' => 'container_12 clearfix',
-			'main'    => 'grid_7 suffix_1',
-			'sidebar' => 'grid_4'
+			'main'    => 'grid_6',
+			'sidebar_first' => 'grid_3',
+			'sidebar' => 'grid_3'
 		)
 	),
 	'less' => array(
@@ -114,6 +120,7 @@ $roots_css_frameworks = array(
 		'classes' => array(
 			'container' => 'container',
 			'main'    => '',
+			'sidebar_first' => '',
 			'sidebar' => ''
 		)
 	),
@@ -123,6 +130,7 @@ $roots_css_frameworks = array(
 		'classes' => array(
 			'container' => '',
 			'main'    => '',
+			'sidebar_first' => '',
 			'sidebar' => ''
 		)
 	)
@@ -142,12 +150,13 @@ add_action('admin_head', 'roots_add_frameworks_object_script');
 
 function roots_get_default_theme_options() {
 	global $roots_css_frameworks;
-	$default_framework = 'blueprint';
+	$default_framework = apply_filters('roots_default_css_framework','blueprint');
 	$default_framework_settings = $roots_css_frameworks[$default_framework];
 	$default_theme_options = array(
 		'css_framework'			=> $default_framework,
 		'container_class'		=> $default_framework_settings['classes']['container'],
 		'main_class'			=> $default_framework_settings['classes']['main'],
+		'sidebar_first_class' => $default_framework_settings['classes']['sidebar_first'],
 		'sidebar_class'			=> $default_framework_settings['classes']['sidebar'],
 		'google_analytics_id'	=> '',
 		'clean_menu'			=> true,
@@ -186,6 +195,16 @@ function roots_theme_options_render_page() {
 								<option value="<?php echo esc_attr($css_framework['name']); ?>" <?php selected($roots_options['css_framework'], $css_framework['name']); ?>><?php echo $css_framework['label']; ?></option>						
 							<?php } ?>
 							</select>
+						</fieldset>
+					</td>
+				</tr>
+
+				<tr valign="top"><th scope="row"><?php _e('#sidebar-first CSS Classes', 'roots'); ?></th>
+					<td>
+						<fieldset><legend class="screen-reader-text"><span><?php _e('#sidebar-first CSS Classes', 'roots'); ?></span></legend>
+							<input type="text" name="roots_theme_options[sidebar_first_class]" id="sidebar_first_class" value="<?php echo esc_attr($roots_options['sidebar_first_class']); ?>" class="regular-text" />
+							<br />
+              				<small class="description"><?php _e('Default:', 'roots'); ?> <span><?php echo $roots_default_options['sidebar_first_class']; ?></span></small>
 						</fieldset>
 					</td>
 				</tr>
@@ -260,6 +279,9 @@ function roots_theme_options_validate($input) {
 
 	// set the value of the main container class depending on the selected grid framework
 	$output['container_class'] = $roots_css_frameworks[$output['css_framework']]['classes']['container'];
+
+	if (isset($input['sidebar_first_class']))
+		$output['sidebar_first_class'] = $input['sidebar_first_class'];	
 
 	if (isset($input['main_class']))
 		$output['main_class'] = $input['main_class'];

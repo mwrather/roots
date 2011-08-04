@@ -66,7 +66,7 @@ function roots_setup() {
 add_action('after_setup_theme', 'roots_setup');
 
 // create widget areas: sidebar, footer
-$sidebars = array('Sidebar', 'Footer');
+$sidebars = array('Sidebar First', 'Sidebar Last', 'Footer');
 foreach ($sidebars as $sidebar) {
 	register_sidebar(array('name'=> $sidebar,
 		'before_widget' => '<article id="%1$s" class="widget %2$s"><div class="container">',

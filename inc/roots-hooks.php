@@ -24,6 +24,10 @@ function roots_sidebar_before() { do_action('roots_sidebar_before'); }
 function roots_sidebar_inside_before() { do_action('roots_sidebar_inside_before'); }					
 function roots_sidebar_inside_after() { do_action('roots_sidebar_inside_after'); }					
 function roots_sidebar_after() { do_action('roots_sidebar_after'); }					
+function roots_sidebar_first_before() { do_action('roots_sidebar_first_before'); }					
+function roots_sidebar_first_inside_before() { do_action('roots_sidebar_first_inside_before'); }					
+function roots_sidebar_first_inside_after() { do_action('roots_sidebar_first_inside_after'); }					
+function roots_sidebar_first_after() { do_action('roots_sidebar_first_after'); }					
 
 // footer.php
 function roots_footer_before() { do_action('roots_footer_before'); }	
